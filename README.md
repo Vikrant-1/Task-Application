@@ -23,7 +23,8 @@ Log in using email and password if registered
   
 # Home Screen
 
- 1. task screen default mode
+ 1. Task screen default mode
+ 2. Theme Switch and Logout button is given in App Bar.
   
  ![image](https://user-images.githubusercontent.com/86877242/190453436-bca83dc9-ab33-43ed-a39a-be02dc623fcd.png)
  
