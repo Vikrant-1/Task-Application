@@ -1,15 +1,15 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { FlatList, View , ActivityIndicator, Alert, TouchableOpacity, Animated } from 'react-native';
-import { Appbar,useTheme, Button , Portal,Modal,TextInput,Text,Switch,  Title, Surface, Card, Avatar, Checkbox} from 'react-native-paper';
-import GlobalStyles from '../../Styles/GlobalStyles';
+import {  View , ActivityIndicator, Alert, TouchableOpacity, Animated, StatusBar, FlatList, ImageBackground,   } from 'react-native';
+import { Appbar,useTheme, Button,Modal,TextInput,Switch, Card, Avatar, Checkbox,  IconButton, Surface, Title, Paragraph, withTheme, Divider} from 'react-native-paper';
+import GlobalStyles, { WIDTH } from '../../Styles/GlobalStyles';
 import {AuthContext} from '../../Context/AuthContext';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import firestore from '@react-native-firebase/firestore'
 import auth from '@react-native-firebase/auth'
 
 const HomeScreen = () => {
-    
-    const {signout,setTodo,todo} = useContext(AuthContext);
+    const scrollY = React.useRef(new Animated.Value(0)).current;
+    const {signout,setTodo,todo,user} = useContext(AuthContext);
     const PaperTheme = useTheme();
     const {isDarkTheme,setIsDarkTheme} = useContext(AuthContext);
     const [loading, setLoading] = useState(true); 
@@ -70,6 +70,7 @@ const HomeScreen = () => {
         ).then(
             setVisible(false)
         )
+        clearData();
     }
 
 
@@ -164,7 +165,10 @@ const onupdationSubmit = async() => {
     // Modal 
     const [visible, setVisible] = React.useState(false);
     const showModal = () => setVisible(true);
-    const hideModal = () => setVisible(false);
+    const hideModal = () => {
+        setVisible(false);
+        clearData();
+    };
     const containerStyle = {backgroundColor: 'white', padding: 20};
 
     
@@ -172,7 +176,7 @@ const onupdationSubmit = async() => {
 
 
     if (loading) {
-        return <ActivityIndicator />;
+        return <ActivityIndicator  />;
       }
     
     const onTextHandler = (text,value) => {
@@ -180,51 +184,59 @@ const onupdationSubmit = async() => {
         if(value ===  'description' ) setDescription(text);
         
     }
-    
+
+
 
     return(
         <>
         <View style={GlobalStyles.fullScreen} >
-            <Appbar.Header  >
-                <Appbar.Content title="Todos" />
+            <Appbar.Header >
+                <Appbar.Content title={`Hi , ${auth().currentUser.displayName}`} />
                 <Switch 
-                style={{left:-10}}
+                    style={{left:-10}}
                     value={PaperTheme}
                     onValueChange={()=>{setIsDarkTheme(!isDarkTheme)}}
                 />
                 <Icon onPress={()=>{signout()}} style={{}} name='logout' size={25} color={'#fff'} />
                 
             </Appbar.Header>
-
+            <ImageBackground blurRadius={50} source={{ uri:'https://tse4.mm.bing.net/th?id=OIP.uF0BVnhQXVOPzn2Qsr3uQAHaNK&pid=Api&P=0' }} >
             <FlatList
+               
                 showsVerticalScrollIndicator={false}
                 data={todo}
                 contentContainerStyle={
                     {
-                       marginBottom:20
-                        
+                       marginBottom:20,
+                       
                     }
                 }
                 keyExtractor={(item) => item.key}
                 renderItem={({item})=>{
 
+
                     return(
-                    <TouchableOpacity onPress={()=>{onHandleUpdation(item.key)}} >
-                        <Card.Title
-                            style={[GlobalStyles.surface]}
-                            theme={PaperTheme.dark}
-                            title={item.title}
-                            titleNumberOfLines={50}
-                            subtitle={item.description}
-                            subtitleNumberOfLines={1000}
-                            left={(props) => <Avatar.Icon {...props} icon="folder" />}
-                            right={() => <Icon color={PaperTheme.colors.text} size={22} name="delete" onPress={()=>ondeleteHandler(item.key)} />}
-                        />
-                    </TouchableOpacity>
+                    <Surface theme={PaperTheme} style={[GlobalStyles.surface]} >
+                        <TouchableOpacity onPress={() => {onHandleUpdation(item.key)}}>
+                            <View style={{flexDirection:'row',alignItems:'center',}}>
+                                <Avatar.Icon icon={'folder'} size={35} style={{  }} />
+                                <Title numberOfLines={1} style={{width:WIDTH-100,paddingHorizontal:10}} >
+                                    {item.title}
+                                </Title>
+                            </View>
+                       </TouchableOpacity>
+                       <View style={{width:WIDTH-50,borderColor:PaperTheme.colors.text,borderTopWidth:1,marginVertical:7,height:0.1}} ></View>
+                        <Paragraph >
+                            {item.description}
+                        </Paragraph>
+                        <IconButton icon={'delete'}  size={20}  style={{ alignSelf:'flex-end' }}  onPress={()=>ondeleteHandler(item.key)} />
+                     </Surface>
                     )
                 }
             }
-            />            
+            />   
+            </ImageBackground>
+         
 
            <View style={{alignItems:'center', position:'absolute',bottom:30,right:30,alignSelf:'center',elevation:10}}>
                 <Button onPress={showModal} icon={'plus'} labelStyle={{fontSize:22}} contentStyle={{height:60,width:60,}} mode='contained' compact={true}>
@@ -234,6 +246,7 @@ const onupdationSubmit = async() => {
         </View>
         <Modal visible={visible} onDismiss={hideModal} contentContainerStyle={containerStyle} >
                 <TextInput
+                    multiline={true}
                     style={{marginVertical:10}}
                     label="Title"
                     value={title}
@@ -241,6 +254,7 @@ const onupdationSubmit = async() => {
                     
                 />
                 <TextInput
+                    multiline={true}
                     style={{marginVertical:10,marginBottom:30}}
                     label="Description"
                     value={description}
@@ -254,12 +268,14 @@ const onupdationSubmit = async() => {
 
         <Modal visible={updationModalVisible} onDismiss={hideUpdationModal} contentContainerStyle={containerStyle} >
             <TextInput
+                multiline={true}
                 style = {{marginVertical:10}}
                 value = {title}
                 onChangeText = {text => onTextHandler(text,'title')}
                 
             />
             <TextInput
+                multiline={true}
                 style={{marginVertical:10,marginBottom:30}}
                 value={description}
                 onChangeText={text => onTextHandler(text,'description')}

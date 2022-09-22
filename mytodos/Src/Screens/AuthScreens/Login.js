@@ -1,9 +1,11 @@
 import React, { useContext, useState } from 'react';
-import { Text, View ,TextInput, TouchableOpacity} from 'react-native';
+import { Text, View ,TextInput, TouchableOpacity, Image} from 'react-native';
 import GlobalStyles from '../../Styles/GlobalStyles';
 import {AuthContext} from '../../Context/AuthContext';
+import { useTheme } from 'react-native-paper';
 
 const LoginScreen = ({navigation}) => {
+    const PaperTheme = useTheme();
     const {login} = useContext(AuthContext);
     const [loginEmail , setLoginEmail] = useState('');
     const [loginPassword , setLoginPassword] = useState('');
@@ -23,7 +25,9 @@ const LoginScreen = ({navigation}) => {
     return(
         <View style={[GlobalStyles.fullScreen]}>
             
-            <View style={GlobalStyles.loginUpper}>
+            <View style={[GlobalStyles.loginUpper,{backgroundColor:PaperTheme.colors.primary}]}>
+            <Image style={{width:100,height:100}} source={require('../../Assets/logo.png')} />
+
             </View>
 
             <View style={[GlobalStyles.loginBottom]}>
@@ -46,8 +50,9 @@ const LoginScreen = ({navigation}) => {
 
                 </View>
                 
-                <TouchableOpacity onPress={handleLogin} style={[GlobalStyles.centerAlignment,GlobalStyles.button_1]}>
-                    <Text style={GlobalStyles.fontColor2}>
+                <TouchableOpacity onPress={handleLogin} style={[GlobalStyles.centerAlignment,GlobalStyles.button_1,{backgroundColor:PaperTheme.colors
+                .primary}]}>
+                    <Text style={[GlobalStyles.fontColor2,{color:PaperTheme.colors.background}]}>
                         Login
                     </Text>
                 </TouchableOpacity>

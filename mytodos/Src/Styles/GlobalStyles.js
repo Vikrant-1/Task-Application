@@ -1,6 +1,6 @@
 import { Dimensions, StyleSheet, View } from 'react-native';
 
-const WIDTH = Dimensions.get('window').width;
+export const WIDTH = Dimensions.get('window').width;
 const HEIGHT = Dimensions.get('window').height;
 
 
@@ -16,7 +16,6 @@ export default StyleSheet.create({
     },
     // Buttons
     button_1:{
-        backgroundColor:'#88D690',
         width:WIDTH/2,
         height:50,
         borderRadius:24,
@@ -36,9 +35,10 @@ export default StyleSheet.create({
     loginUpper:{
         width:WIDTH,
         height:HEIGHT*0.3,
-        backgroundColor:'#88D690',
         borderBottomLeftRadius:34,
         borderBottomRightRadius:34,
+        justifyContent:'center',
+        alignItems:'center',
 
     },
     loginBottom:{
@@ -73,11 +73,12 @@ export default StyleSheet.create({
     // Home
     surface: {
         padding: 8,
-        width: WIDTH-20,
-        marginHorizontal:10,
-        marginVertical:5,
+        width: WIDTH-40,
+        alignSelf:'center',
+        marginVertical:10,
         borderRadius:12,
-        borderWidth:1,
+        elevation:20
+        
       },
 
 

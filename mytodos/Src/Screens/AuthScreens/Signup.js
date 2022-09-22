@@ -2,9 +2,13 @@ import React,{useContext, useState} from 'react';
 import { Text, View ,TextInput,TouchableOpacity} from 'react-native';
 import { AuthContext } from '../../Context/AuthContext';
 import GlobalStyles from '../../Styles/GlobalStyles';
+import { useTheme } from 'react-native-paper';
+
 
 const SignupScreen = ({navigation}) => {
     const {signup} = useContext(AuthContext)
+    const PaperTheme = useTheme();
+
 
     const [name , setName] = useState('');
     const [signUpEmail , setSignInEmail] = useState('');
@@ -46,8 +50,8 @@ const SignupScreen = ({navigation}) => {
 
                 />
                 
-                <TouchableOpacity onPress={()=>{signup(signUpEmail,signUpPassword,name)}} style={[GlobalStyles.centerAlignment,GlobalStyles.button_1]}>
-                    <Text style={GlobalStyles.fontColor2}>
+                <TouchableOpacity onPress={()=>{signup(signUpEmail,signUpPassword,name)}} style={[GlobalStyles.centerAlignment,GlobalStyles.button_1,{backgroundColor:PaperTheme.colors.primary}]}>
+                    <Text style={{color:PaperTheme.colors.background}}>
                         Registor
                     </Text>
                 </TouchableOpacity>

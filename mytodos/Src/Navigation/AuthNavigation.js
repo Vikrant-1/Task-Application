@@ -2,10 +2,12 @@ import {createStackNavigator} from '@react-navigation/stack';
 import LoginScreen from '../Screens/AuthScreens/Login';
 import SignupScreen from '../Screens/AuthScreens/Signup';
 import Splash from '../Splash/splash';
+import { useTheme } from 'react-native-paper';
 
 const Stack  = createStackNavigator(); 
 
 const AuthNavigation = () => {
+    const PaperTheme = useTheme();
     return(
 
             <Stack.Navigator screenOptions={{
@@ -16,7 +18,8 @@ const AuthNavigation = () => {
                 <Stack.Screen options={{
                     headerShown:true,
                     title:'Registration',
-                    headerStyle:{backgroundColor:'#88D690'}
+                    headerTintColor:PaperTheme.colors.background,
+                    headerStyle:{backgroundColor: PaperTheme.colors.primary }
                 }} name='Signup' component={SignupScreen}/>
             </Stack.Navigator>
         
